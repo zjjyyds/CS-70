@@ -1,0 +1,154 @@
+% Search for all the places that say "PUT SOMETHING HERE".
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,enumerate}
+\usepackage{xeCJK}
+
+
+\def\Name{吴彦祖}  % Your name
+\def\SID{20211003341}  % Your student ID number-
+\def\Homework{0A} % Number of Homework
+\def\Session{Spring 2024}
+
+\title{CS70--Spring 2024 --- Discussion \Homework \  Solutions}
+\author{\Name, SID \SID}
+\markboth{CS70--\Session\  Discussion \Homework\ \Name}{CS70--\Session\ Discussion \Homework\ \Name}
+\pagestyle{myheadings}
+\date{\today}
+
+\newenvironment{qparts}{\begin{enumerate}[{(}a{)}]}{\end{enumerate}}
+\def\endproofmark{$\Box$}
+\newenvironment{proof}{\par{\bf Proof}:}{\endproofmark\smallskip}
+
+\textheight=9in
+\textwidth=6.5in
+\topmargin=-.75in
+\oddsidemargin=0.25in
+\evensidemargin=0.25in
+
+
+\begin{document}
+\maketitle
+
+Collaborators: 吴彦祖
+
+\section*{1. 命题练习}
+将以下句子转化为命题逻辑，并将以下命题转化为中文。说明每个语句是否为真，并给出简要理由。
+
+\begin{qparts}
+\item 存在一个不是有理数的实数。
+
+命题逻辑表达：$\exists x \in \mathbb{R},\ x \notin \mathbb{Q}$\\
+真。理由：如 $\sqrt{2}$ 就是一个无理数。
+
+\item 所有整数要么是自然数，要么是负数，但不能两者兼是。
+
+命题逻辑表达：$\forall x \in \mathbb{Z},\ (x \in \mathbb{N}) \vee (x < 0)$，且$(x \in \mathbb{N}) \wedge (x < 0)$ 不成立。\\
+真。理由：自然数和负数没有交集，所有整数要么属于自然数（通常指非负整数），要么是负数。
+
+\item 如果一个自然数能被6整除，那么它能被2整除或能被3整除。
+
+命题逻辑表达：$\forall x \in \mathbb{N},\ 6|x \implies (2|x \vee 3|x)$\\
+真。理由：6的倍数必然是2和3的倍数之一。
+
+\item $(\forall x \in \mathbb{Z})(x \in \mathbb{Q})$
+
+中文翻译：所有整数都是有理数。\\
+真。理由：每个整数都可以写成分数形式（如 $n = \frac{n}{1}$）。
+
+\item $(\forall x \in \mathbb{Z})(((2 \mid x) \vee (3 \mid x)) \Longrightarrow (6 \mid x))$
+
+中文翻译：所有整数中，只要能被2或3整除，就能被6整除。\\
+假。理由：反例：$x=2$ 能被2整除但不能被6整除。
+
+\item $(\forall x \in \mathbb{N})(x > 7 \Longrightarrow (\exists a, b \in \mathbb{N})(a + b = x))$
+
+中文翻译：所有大于7的自然数都可以表示为两个自然数之和。\\
+真。理由：取 $a=1, b=x-1$ 即可。
+
+\end{qparts}
+
+\section*{2. 真值表}
+通过写出真值表，判断以下等价关系是否成立。明确说明每对是否等价。
+
+\begin{qparts}
+\item $P \wedge (Q \vee P) \equiv P \wedge Q$
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+$P$ & $Q$ & $Q \vee P$ & $P \wedge (Q \vee P)$ & $P \wedge Q$ \\
+\hline
+T & T & T & T & T \\
+T & F & T & T & F \\
+F & T & T & F & F \\
+F & F & F & F & F \\
+\hline
+\end{tabular}
+\end{center}
+
+不等价。理由：当 $P$ 为真，$Q$ 为假时，左边为真，右边为假。
+
+\item $(P \vee Q) \wedge R \equiv (P \wedge R) \vee (Q \wedge R)$
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+$P$ & $Q$ & $R$ & $P \vee Q$ & $(P \vee Q) \wedge R$ & $P \wedge R$ & $Q \wedge R$ & $(P \wedge R) \vee (Q \wedge R)$ \\
+\hline
+T & T & T & T & T & T & T & T \\
+T & T & F & T & F & F & F & F \\
+T & F & T & T & T & T & F & T \\
+T & F & F & T & F & F & F & F \\
+F & T & T & T & T & F & T & T \\
+F & T & F & T & F & F & F & F \\
+F & F & T & F & F & F & F & F \\
+F & F & F & F & F & F & F & F \\
+\hline
+\end{tabular}
+\end{center}
+
+等价。理由：分配律，两边恒等。
+
+\item $(P \wedge Q) \vee R \equiv (P \vee R) \wedge (Q \vee R)$
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+$P$ & $Q$ & $R$ & $P \wedge Q$ & $(P \wedge Q) \vee R$ & $P \vee R$ & $Q \vee R$ & $(P \vee R) \wedge (Q \vee R)$ \\
+\hline
+T & T & T & T & T & T & T & T \\
+T & T & F & T & T & T & T & T \\
+T & F & T & F & T & T & T & T \\
+T & F & F & F & F & T & F & F \\
+F & T & T & F & T & T & T & T \\
+F & T & F & F & F & F & T & F \\
+F & F & T & F & T & T & T & T \\
+F & F & F & F & F & F & F & F \\
+\hline
+\end{tabular}
+\end{center}
+
+等价。理由：吸收律，两边恒等。
+
+\end{qparts}
+
+\section*{3. 蕴含}
+以下哪些蕴含无论 $P$ 取何值总是为真？对于每个假的断言，给出一个反例（即找出一个 $P(x, y)$ 使得蕴含为假）。
+
+\begin{qparts}
+\item $\forall x \forall y P(x, y) \Longrightarrow \forall y \forall x P(x, y)$
+
+恒真。理由：量词顺序互换不影响全称命题。
+
+\item $\forall x \exists y P(x, y) \Longrightarrow \exists y \forall x P(x, y)$
+
+不恒真。反例：设 $P(x, y)$ 表示“$x < y$”，则对每个 $x$ 存在 $y$ 使得 $x < y$，但不存在某个 $y$ 使得对所有 $x$ 都有 $x < y$。
+
+\item $\exists x \forall y P(x, y) \Longrightarrow \forall y \exists x P(x, y)$
+
+恒真。理由：如果存在某个 $x$ 对所有 $y$ 都成立，则对每个 $y$ 取这个 $x$ 即可。
+
+\end{qparts}
+
+\end{document}
