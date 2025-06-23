@@ -1,0 +1,135 @@
+% Search for all the places that say "PUT SOMETHING HERE".
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,enumerate}
+\usepackage{xeCJK}
+
+
+\def\Name{JayZhao}  % Your name
+\def\SID{0}  % Your student ID number-
+\def\Homework{0A} % Number of Homework
+\def\Session{Spring 2024}
+
+\title{CS70--Spring 2024 --- Discussion \Homework \  Solutions}
+\author{\Name, SID \SID}
+\markboth{CS70--\Session\  Discussion \Homework\ \Name}{CS70--\Session\ Discussion \Homework\ \Name}
+\pagestyle{myheadings}
+\date{\today}
+
+\newenvironment{qparts}{\begin{enumerate}[{(}a{)}]}{\end{enumerate}}
+\def\endproofmark{$\Box$}
+\newenvironment{proof}{\par{\bf Proof}:}{\endproofmark\smallskip}
+
+\textheight=9in
+\textwidth=6.5in
+\topmargin=-.75in
+\oddsidemargin=0.25in
+\evensidemargin=0.25in
+
+
+\begin{document}
+\maketitle
+
+Collaborators: 吴彦祖
+
+\section*{1. 自然归纳法应用于不等式}
+\textbf{笔记 3} 证明：如果 $n \in \mathbb{N}$ 且 $x > 0$，则 $(1 + x)^n \geq 1 + n x$。
+
+\begin{proof}
+\textbf{基础情形}：当 $n=1$ 时，$(1+x)^1 = 1+x \geq 1+1\cdot x = 1+x$，成立。
+
+\textbf{归纳假设}：假设对 $n=k$ 时成立，即 $(1+x)^k \geq 1+kx$。
+
+\textbf{归纳步骤}：考虑 $n=k+1$，
+$$(1+x)^{k+1} = (1+x)^k (1+x) \geq (1+kx)(1+x) = 1 + (k+1)x + kx^2 \geq 1 + (k+1)x$$
+因为 $x>0$，$kx^2 \geq 0$，所以不等式成立。
+
+因此，对所有 $n \in \mathbb{N}$，$(1+x)^n \geq 1+nx$。
+\end{proof}
+
+\section*{2. 加强证明}
+\textbf{笔记 3} 假设序列 $a_1, a_2, \ldots$ 由 $a_1 = 1$ 以及对于 $n \geq 1$ 的 $a_{n+1} = 3 a_n^2$ 定义。我们想证明：
+\[
+a_n \leq 3^{\left(2^n\right)}
+\]
+对于每个正整数 $n$。
+
+\begin{enumerate}[(a)]
+\item 假设我们想使用归纳法证明这个陈述。我们的归纳假设可以简单地是 $a_n \leq 3^{\left(2^n\right)}$ 吗？尝试用这个假设进行归纳证明，说明为什么这行不通。
+
+\textbf{解答}：
+假设归纳假设 $a_n \leq 3^{2^n}$，则 $a_{n+1} = 3 a_n^2 \leq 3 (3^{2^n})^2 = 3^{1+2\cdot 2^n} = 3^{1+2^{n+1}}$，但目标是 $3^{2^{n+1}}$，多了一个 $+1$，所以无法完成归纳。
+
+\item 尝试改为用归纳法证明陈述 $a_n \leq 3^{\left(2^n - 1\right)}$。
+
+\textbf{解答}：
+\textbf{基础情形}：$n=1$ 时，$a_1=1 \leq 3^{2^1-1}=3^1=3$，成立。
+
+\textbf{归纳假设}：$a_n \leq 3^{2^n-1}$。
+
+\textbf{归纳步骤}：$a_{n+1} = 3 a_n^2 \leq 3 (3^{2^n-1})^2 = 3 \cdot 3^{2\cdot(2^n-1)} = 3^{1+2^{n+1}-2} = 3^{2^{n+1}-1}$，归纳成立。
+
+\item 为什么 (b) 部分的假设暗示了整体的结论？
+
+\textbf{解答}：
+因为 $3^{2^n-1} < 3^{2^n}$，所以 $a_n \leq 3^{2^n-1} < 3^{2^n}$，即原命题也成立。
+\end{enumerate}
+
+\section*{3. 二进制数}
+\textbf{笔记 3} 证明每个正整数 $n$ 都可以用二进制表示。换句话说，证明对于任意正整数 $n$，我们可以写成：
+\[
+n = c_k \cdot 2^k + c_{k-1} \cdot 2^{k-1} + \cdots + c_1 \cdot 2^1 + c_0 \cdot 2^0,
+\]
+其中存在某个 $k \in \mathbb{N}$ 且对于所有 $i \leq k$，$c_i \in \{0, 1\}$。
+
+\begin{proof}
+用归纳法证明：
+
+\textbf{基础情形}：$n=1$ 时，$1=1\cdot 2^0$，成立。
+
+\textbf{归纳假设}：假设 $1,2,\ldots,k$ 都可以二进制表示。
+
+\textbf{归纳步骤}：$k+1$ 若为偶数，则 $k+1=2m$，$m\leq k$，$m$ 有二进制表示，则 $k+1$ 也有。若为奇数，则 $k+1=2m+1$，同理。故所有正整数都可二进制表示。
+\end{proof}
+
+\section*{4. 斐波那契数在家练习}
+\textbf{笔记 3} 回想一下，斐波那契数递归定义为：
+\[
+F_1 = 1,\ F_2 = 1 \text{，且 } F_n = F_{n-2} + F_{n-1}。
+\]
+证明每个第三个斐波那契数都是偶数。例如，$F_3 = 2$ 是偶数，$F_6 = 8$ 是偶数。
+
+\begin{proof}
+我们用数学归纳法证明：对于所有正整数 $k$，$F_{3k}$ 是偶数。
+
+\textbf{基础情形}：$k=1$ 时，$F_3=2$，是偶数，成立。
+
+\textbf{归纳假设}：假设对于某个 $k=n$，$F_{3n}$ 是偶数，即 $F_{3n}=2m$，其中 $m$ 为整数。
+
+\textbf{归纳步骤}：我们要证明 $F_{3(n+1)}$ 也是偶数。
+
+根据斐波那契数列递推公式：
+\[
+F_{3(n+1)} = F_{3n+3} = F_{3n+2} + F_{3n+1}
+\]
+又有
+\[
+F_{3n+2} = F_{3n+1} + F_{3n}
+\]
+\[
+F_{3n+1} = F_{3n} + F_{3n-1}
+\]
+将 $F_{3n+2}$ 和 $F_{3n+1}$ 展开：
+\[
+F_{3n+3} = (F_{3n+1} + F_{3n}) + (F_{3n} + F_{3n-1}) = 2F_{3n} + F_{3n+1} + F_{3n-1}
+\]
+但实际上我们只需利用模2的循环性。斐波那契数列模2的周期为3，即
+\[
+F_1 \equiv 1 \pmod{2},\ F_2 \equiv 1 \pmod{2},\ F_3 \equiv 0 \pmod{2},\ F_4 \equiv 1 \pmod{2},\ F_5 \equiv 1 \pmod{2},\ F_6 \equiv 0 \pmod{2},\ldots
+\]
+所以每隔3个数必为偶数。
+
+\textbf{结论}：因此，对于所有正整数 $k$，$F_{3k}$ 都是偶数。
+\end{proof}
+
+\end{document}

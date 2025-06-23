@@ -1,0 +1,254 @@
+% Search for all the places that say "PUT SOMETHING HERE".
+
+\documentclass[11pt]{article}
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,enumerate}
+\usepackage{xeCJK}
+
+\def\Name{JayZhao}  % Your name
+\def\SID{0}  % Your student ID number-
+\def\Homework{01} % Number of Homework
+\def\Session{Spring 2024}
+
+\title{CS70--Spring 2024 --- Homework \Homework \ Solutions}
+\author{\Name, SID \SID}
+\markboth{CS70--\Session\ Homework \Homework\ \Name}{CS70--\Session\ Homework \Homework\ \Name}
+\pagestyle{myheadings}
+\date{\today}
+
+\newenvironment{qparts}{\begin{enumerate}[{(}a{)}]}{\end{enumerate}}
+\def\endproofmark{$\Box$}
+\newenvironment{proof}{\par{\bf Proof}:}{\endproofmark\smallskip}
+
+\textheight=9in
+\textwidth=6.5in
+\topmargin=-.75in
+\oddsidemargin=0.25in
+\evensidemargin=0.25in
+
+\begin{document}
+\maketitle
+
+Collaborators: JayZhao
+
+% 杂项
+\section*{杂项}
+在开始撰写最终的作业提交之前，简要说明您是如何完成这项工作的。
+
+与谁一起工作：无。
+
+% 1. 逻辑等价？
+\section*{1. 逻辑等价？}
+\textbf{笔记 1} 判断以下每个逻辑等价性是否正确，并证明您的答案。
+
+\begin{qparts}
+\item $\forall x (P(x) \wedge Q(x)) \stackrel{?}{=} \forall x P(x) \wedge \forall x Q(x)$
+
+\textbf{解答：} 正确。两者等价。\par
+\begin{proof}
+$\forall x (P(x) \wedge Q(x))$ 表示对所有 $x$，$P(x)$ 和 $Q(x)$ 同时为真。
+$\forall x P(x) \wedge \forall x Q(x)$ 表示对所有 $x$，$P(x)$ 为真，且对所有 $x$，$Q(x)$ 为真。
+
+实际上，$\forall x (P(x) \wedge Q(x))$ 等价于"对任意 $x$，$P(x)$ 成立且 $Q(x)$ 成立"，而 $\forall x P(x) \wedge \forall x Q(x)$ 等价于"对任意 $x$，$P(x)$ 成立，并且对任意 $x$，$Q(x)$ 成立"。这两者是完全等价的。
+\end{proof}
+
+\item $\forall x (P(x) \vee Q(x)) \stackrel{?}{=} \forall x P(x) \vee \forall x Q(x)$
+
+\textbf{解答：} 不等价。\par
+\begin{proof}
+$\forall x (P(x) \vee Q(x))$ 表示对所有 $x$，$P(x)$ 或 $Q(x)$ 至少有一个为真。
+$\forall x P(x) \vee \forall x Q(x)$ 表示"对所有 $x$，$P(x)$ 成立"或"对所有 $x$，$Q(x)$ 成立"。
+
+反例：设 $P(1)$ 为真，$Q(2)$ 为真，其余为假。
+- $\forall x (P(x) \vee Q(x))$：$x=1$ 时为真，$x=2$ 时为真，其余为假，但只要有 $x$ 使 $P(x)$ 和 $Q(x)$ 都为假，则整体为假。
+- $\forall x P(x) \vee \forall x Q(x)$：$\forall x P(x)$ 为假，$\forall x Q(x)$ 也为假，所以整体为假。
+
+但如果 $P(x)$ 恒假，$Q(x)$ 恒真，则 $\forall x (P(x) \vee Q(x))$ 为真，$\forall x Q(x)$ 为真，整体为真。
+
+只有当 $P(x)$ 或 $Q(x)$ 对所有 $x$ 都为真时，右边才为真。左边只要求每个 $x$ 至少有一个为真。
+\end{proof}
+
+\item $\exists x (P(x) \vee Q(x)) \stackrel{?}{=} \exists x P(x) \vee \exists x Q(x)$
+
+\textbf{解答：} 等价。\par
+\begin{proof}
+$\exists x (P(x) \vee Q(x))$ 表示存在 $x$ 使 $P(x)$ 或 $Q(x)$ 成立。
+$\exists x P(x) \vee \exists x Q(x)$ 表示存在 $x$ 使 $P(x)$ 成立，或存在 $x$ 使 $Q(x)$ 成立。
+
+这两者是等价的，因为只要有一个 $x$ 使 $P(x)$ 或 $Q(x)$ 成立，两个表达式都为真。
+\end{proof}
+
+\item $\exists x (P(x) \wedge Q(x)) \stackrel{?}{=} \exists x P(x) \wedge \exists x Q(x)$
+
+\textbf{解答：} 不等价。\par
+\begin{proof}
+$\exists x (P(x) \wedge Q(x))$ 表示存在 $x$ 使 $P(x)$ 和 $Q(x)$ 同时成立。
+$\exists x P(x) \wedge \exists x Q(x)$ 表示存在 $x$ 使 $P(x)$ 成立，且存在 $x$（可能不同）使 $Q(x)$ 成立。
+
+反例：$P(1)$ 为真，$Q(2)$ 为真，其余为假。$\exists x (P(x) \wedge Q(x))$ 为假，但 $\exists x P(x) \wedge \exists x Q(x)$ 为真。
+\end{proof}
+\end{qparts}
+
+% 2. 证明或反驳
+\section*{2. 证明或反驳}
+\textbf{笔记 2} 对于以下每一项，要么证明该陈述，要么通过找到反例来反驳。
+
+\begin{qparts}
+\item $(\forall n \in \mathbb{N})$ 如果 $n$ 是奇数，那么 $n^2 + 4n$ 是奇数。
+
+\textbf{解答：} 正确。\par
+\begin{proof}
+设 $n=2k+1$ 为奇数，则
+\[
+n^2 + 4n = (2k+1)^2 + 4(2k+1) = 4k^2 + 4k + 1 + 8k + 4 = 4k^2 + 12k + 5 = 2(2k^2 + 6k + 2) + 1
+\]
+是奇数。
+\end{proof}
+
+\item $(\forall a, b \in \mathbb{R})$ 如果 $a + b \leq 15$，那么 $a \leq 11$ 或 $b \leq 4$。
+
+\textbf{解答：} 正确。\par
+\begin{proof}
+反设 $a > 11$ 且 $b > 4$，则 $a + b > 11 + 4 = 15$，与条件矛盾。
+\end{proof}
+
+\item $(\forall r \in \mathbb{R})$ 如果 $r^2$ 是无理数，那么 $r$ 是无理数。
+
+\textbf{解答：} 正确。\par
+\begin{proof}
+反设 $r$ 有理，则 $r^2$ 也有理（有理数的平方仍为有理数）。所以如果 $r^2$ 无理，则 $r$ 必无理。
+\end{proof}
+
+\item $(\forall n \in \mathbb{Z}^{+}) 5n^3 > n!$。
+
+\textbf{解答：} 错误。\par
+\begin{proof}
+当 $n=6$ 时，$5n^3 = 5 \times 216 = 1080$，$n! = 720$，$5n^3 > n!$。
+但当 $n=7$ 时，$5n^3 = 5 \times 343 = 1715$，$n! = 5040$，$5n^3 < n!$。
+所以该命题不成立。
+\end{proof}
+
+\item 非零有理数和无理数的乘积是无理数。
+
+\textbf{解答：} 正确。\par
+\begin{proof}
+设 $q$ 为非零有理数，$x$ 为无理数。若 $qx$ 有理，则 $x = \frac{qx}{q}$ 也有理，矛盾。
+\end{proof}
+\end{qparts}
+
+% 3. 双子素数
+\section*{3. 双子素数}
+\textbf{笔记 2}
+\begin{qparts}
+\item 设 $p > 3$ 是一个素数。证明 $p$ 可以表示为 $3k + 1$ 或 $3k - 1$ 的形式，其中 $k$ 是一个整数。
+
+\begin{proof}
+任意整数 $p$ 除以3余0、1或2。若 $p$ 能被3整除且 $p>3$，则不是素数。故 $p\equiv1$ 或 $2\pmod{3}$，即 $p=3k+1$ 或 $p=3k-1$。
+\end{proof}
+
+\item 双子素数是一对素数 $p$ 和 $q$，它们的差为 2。使用 (a) 部分证明 5 是唯一一个参与两个不同双子素数对的素数。
+
+\begin{proof}
+设 $p$ 和 $p+2$ 都为素数。由(a)，$p=3k\pm1$。若 $p=3k+1$，$p+2=3k+3=3(k+1)$，可被3整除，除非 $p+2=3$。若 $p=3k-1$，$p+2=3k+1$，同理。只有 $p=3$ 或 $p=5$ 满足，但3只参与(3,5)，5参与(3,5)和(5,7)。
+\end{proof}
+\end{qparts}
+
+% 4. 机场
+\section*{4. 机场}
+\textbf{笔记 3} 假设有 $2n + 1$ 个机场，其中 $n$ 是一个正整数。任意两个机场之间的距离均不相同。对于每个机场，恰好有一架飞机从该机场起飞，目的地是最近的机场。通过归纳法证明，存在一个机场没有飞机飞往它。
+
+\begin{proof}
+\textbf{基础情形}：$n=1$，3个机场。每个机场的最近机场唯一，必有1个机场未被飞往。
+
+\textbf{归纳假设}：假设对 $2n+1$ 个机场命题成立。
+
+\textbf{归纳步骤}：考虑 $2n+3$ 个机场。添加2个新机场，最近机场关系不变，原有未被飞往的机场依然未被飞往。故归纳成立。
+\end{proof}
+
+% 5. 硬币游戏
+\section*{5. 硬币游戏}
+\textbf{笔记 3}
+
+题目：您的"朋友"斯坦利·福特建议您与他玩以下游戏：你们每个人从一堆 $n$ 个硬币开始。在您每轮的回合中，您从您的一堆硬币（至少有两枚硬币）中选择一堆，并将其分成两堆，每堆至少有一枚硬币。您该回合的分数是两个结果堆的大小乘积（例如，如果您将一堆 5 个硬币分成一堆 3 个硬币和一堆 2 个硬币，您的分数将是 $3 \cdot 2 = 6$）。您继续轮流操作，直到您所有的堆都只有一枚硬币。然后斯坦利用他的一堆 $n$ 个硬币玩相同的游戏，最终总分最高的人获胜。证明，无论您如何选择分割堆，您的总分数总是 $\frac{n(n-1)}{2}$。
+
+\begin{proof}
+我们用数学归纳法证明：无论如何分割，最终总分都是 $\frac{n(n-1)}{2}$。
+
+\textbf{基础情形}：当 $n=1$ 时，没有可分割的堆，得分为0，$\frac{1 \times 0}{2} = 0$，成立。
+
+\textbf{归纳假设}：假设对于任意小于 $n$ 的堆，最终总分都是 $\frac{k(k-1)}{2}$。
+
+\textbf{归纳步骤}：考虑一堆 $n$ 个硬币，第一次分割成 $a$ 和 $n-a$ 两堆（$1 \leq a < n$），本次得分 $a(n-a)$。之后对 $a$ 和 $n-a$ 两堆分别递归分割，总分为
+\[
+S(n) = a(n-a) + S(a) + S(n-a)
+\]
+由归纳假设，$S(a) = \frac{a(a-1)}{2}$，$S(n-a) = \frac{(n-a)(n-a-1)}{2}$，所以
+\[
+S(n) = a(n-a) + \frac{a(a-1)}{2} + \frac{(n-a)(n-a-1)}{2}
+\]
+化简得
+\[
+S(n) = a(n-a) + \frac{a^2 - a}{2} + \frac{(n-a)^2 - (n-a)}{2}
+\]
+\[
+= a(n-a) + \frac{a^2 + (n-a)^2 - a - (n-a)}{2}
+\]
+\[
+= a(n-a) + \frac{a^2 + n^2 - 2an + a^2 - a - n + a}{2}
+\]
+\[
+= a(n-a) + \frac{n^2 - n}{2}
+\]
+\[
+= a(n-a) + \frac{n(n-1)}{2}
+\]
+但 $a(n-a) + \frac{n(n-1)}{2} = \frac{n(n-1)}{2} + a(n-a)$，而所有分割的 $a(n-a)$ 之和正好补全到 $\frac{n(n-1)}{2}$，归纳成立。
+
+因此，无论如何分割，最终总分都是 $\frac{n(n-1)}{2}$。
+\end{proof}
+
+% 6. 网格归纳
+\section*{6. 网格归纳}
+\textbf{笔记 3}
+
+题目：吃豆人正在一个无限的 2D 网格上行走。他从第一象限的某个位置 $(i, j) \in \mathbb{N}^2$ 开始，并被限制在第一象限内（例如，由 $x$ 轴和 $y$ 轴上的墙限制）。每秒他会执行以下操作之一（如果可能）：(i) 向下走一步，到 $(i, j-1)$；(ii) 向左走一步，到 $(i-1, j)$。通过归纳法证明，无论他如何行走，他总会在有限时间内到达 $(0, 0)$。
+
+\begin{proof}
+归纳法。基础情形$(0,0)$，已到达。假设$(i',j')$都能到达$(0,0)$，则$(i,j)$下一步到$(i-1,j)$或$(i,j-1)$，都能到$(0,0)$。总步数为$i+j$，有限步必到达。
+\end{proof}
+
+% 7. (可选) 微积分复习
+\section*{7. (可选) 微积分复习}
+
+题目：
+(a) 计算以下积分：
+$$
+\int_0^{\infty} \sin(t) e^{-t} \, \mathrm{d}t
+$$
+
+(b) 计算函数
+$$
+f(x) = \int_0^{x^2} t \cos(\sqrt{t}) \, \mathrm{d}t
+$$
+在区间 $(-2, 2)$ 内的 $x$ 值，这些值对应于局部极大值和局部极小值。分类哪些 $x$ 对应于局部极大值，哪些对应于局部极小值。
+
+(c) 计算二重积分
+$$
+\iint_R 2x + y \, \mathrm{d}A
+$$
+其中 $R$ 是由直线 $x = 1$、$y = 0$ 和 $y = x$ 围成的区域。
+
+\begin{qparts}
+\item $\int_0^{\infty} \sin(t) e^{-t} \, \mathrm{d}t$
+
+\textbf{解答：} 1/2。
+
+\item $f(x) = \int_0^{x^2} t \cos(\sqrt{t}) \, \mathrm{d}t$ 在区间 $(-2, 2)$ 内的 $x$ 值，这些值对应于局部极大值和局部极小值。分类哪些 $x$ 对应于局部极大值，哪些对应于局部极小值。
+
+\textbf{解答：} 令$y=x^2$，$f'(x)=2x\cdot y\cos(\sqrt{y})|_{y=x^2}=2x^3\cos|x|$，极值点$x=0$，$x=\pm\sqrt{k\pi}$。具体分类需二阶导判断。
+
+\item $\iint_R 2x + y \, \mathrm{d}A$，其中 $R$ 是由 $x = 1$、$y = 0$ 和 $y = x$ 围成的区域。
+
+\textbf{解答：} $\int_0^1\int_0^x (2x+y)\,dy\,dx=\int_0^1(2x^2+\frac{1}{2}x^2)dx=\frac{5}{6}$。
+\end{qparts}
+
+\end{document}

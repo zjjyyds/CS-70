@@ -1,0 +1,178 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,enumerate}
+\usepackage{xeCJK}
+
+\def\Name{JayZhao}  % Your name
+\def\SID{0}  % Your student ID number-
+\def\Homework{1B} % Number of Homework
+\def\Session{Spring 2024}
+
+\title{CS70--Spring 2024 --- Discussion \Homework \ Solutions}
+\author{\Name, SID \SID}
+\markboth{CS70--\Session\ Discussion \Homework\ \Name}{CS70--\Session\ Discussion \Homework\ \Name}
+\pagestyle{myheadings}
+\date{\today}
+
+\newenvironment{qparts}{\begin{enumerate}[{(}a{)}]}{\end{enumerate}}
+\def\endproofmark{$\Box$}
+\newenvironment{proof}{\par{\bf Proof}:}{\endproofmark\smallskip}
+
+\textheight=9in
+\textwidth=6.5in
+\topmargin=-.75in
+\oddsidemargin=0.25in
+\evensidemargin=0.25in
+
+\begin{document}
+\maketitle
+
+Collaborators: 吴彦祖
+
+% 1. 稳定匹配
+\section*{1. 稳定匹配}
+\textbf{笔记 4}
+考虑工作岗位集合 $J = \{1, 2, 3\}$ 和求职者集合 $C = \{A, B, C\}$，其偏好如下：
+
+\begin{center}
+\begin{tabular}{c|ccc}
+工作岗位 & 第一偏好 & 第二偏好 & 第三偏好 \\
+\hline
+1 & A & B & C \\
+2 & B & A & C \\
+3 & A & B & C \\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{c|ccc}
+求职者 & 第一偏好 & 第二偏好 & 第三偏好 \\
+\hline
+A & 2 & 1 & 3 \\
+B & 1 & 3 & 2 \\
+C & 1 & 2 & 3 \\
+\end{tabular}
+\end{center}
+
+运行传统的提出-拒绝算法：
+
+\begin{proof}
+\textbf{第一天：}
+\begin{itemize}
+  \item 岗位1向A提议，岗位2向B提议，岗位3向A提议。
+  \item A收到1和3的提议，A更喜欢1，暂时接受1，拒绝3。
+  \item B收到2的提议，接受。
+  \item C没有收到提议。
+\end{itemize}
+
+\textbf{第二天：}
+\begin{itemize}
+  \item 岗位3被A拒绝后，向B提议。
+  \item B已被2录用，但B更喜欢1（已被A占据），次选3。B更喜欢3于2，于是B接受3，拒绝2。
+  \item 2被拒绝后，下一轮向A提议。
+\end{itemize}
+
+\textbf{第三天：}
+\begin{itemize}
+  \item 岗位2向A提议，A已被1录用，A更喜欢1于2，拒绝2。
+  \item 2向C提议，C接受。
+\end{itemize}
+
+\textbf{最终配对：}
+1-A，3-B，2-C。
+
+\textbf{共用3天。}
+\end{proof}
+
+% 2. 提出-拒绝证明
+\section*{2. 提出-拒绝证明}
+\textbf{笔记 4}
+\begin{qparts}
+\item 在算法的任何执行中，如果一名求职者在第 $i$ 天收到一个建议，那么在此后直到算法终止的每一天她都会收到一些建议。
+
+\begin{proof}
+一旦求职者收到建议，除非被更喜欢的岗位录用，否则总会有岗位向她提议（因为被拒绝的岗位会继续向下一个偏好提议）。因此直到算法结束，她每天都会收到建议。
+\end{proof}
+
+\item 在算法的任何执行中，如果一名求职者在第 $i$ 天没有收到建议，那么她在前一天 $j$（$1 \leq j < i$）也没有收到建议。
+
+\begin{proof}
+岗位只会向未被录用的求职者提议。如果某天未收到建议，说明之前也未被提议。
+\end{proof}
+
+\item 在算法的任何执行中，至少有一名求职者只收到一个建议。
+
+\begin{proof}
+岗位和求职者数量相等，鸽巢原理可知，至少有一人只收到一个岗位的提议。
+\end{proof}
+\end{qparts}
+
+% 3. 当裁判
+\section*{3. 当裁判}
+\textbf{笔记 4}
+\begin{qparts}
+\item 对于 $n > 1$ 的 $n$ 个工作岗位和 $n$ 个求职者，存在一个稳定匹配实例，使得在工作岗位提议的稳定匹配算法中，每个工作岗位最终都与它最不喜欢的求职者配对。
+
+\textbf{解答：} 假。每个岗位会优先向更喜欢的求职者提议，只有被拒绝后才会向下一个提议，因此不可能所有岗位都和最不喜欢的求职者配对。
+
+\item 在一个稳定匹配实例中，如果工作岗位 $J$ 和求职者 $C$ 各自在对方偏好列表的顶部，那么 $J$ 必须在每个稳定配对中与 $C$ 配对。
+
+\textbf{解答：} 真。否则$J$和$C$会形成阻挡对（blocking pair），不稳定。
+
+\item 在至少有两个工作岗位和两个求职者的稳定匹配实例中，如果工作岗位 $J$ 和求职者 $C$ 各自在对方偏好列表的底部，那么 $J$ 不能在任何稳定配对中与 $C$ 配对。
+
+\textbf{解答：} 假。虽然互为最不喜欢，但如果其他配对会导致不稳定，$J$和$C$仍可能被配对。
+
+\item 对于每个 $n > 1$，存在一个 $n$ 个工作岗位和 $n$ 个求职者的稳定匹配实例，其中存在一个不稳定的配对，所有未匹配的工作岗位-求职者对都是流氓配对或配对。
+
+\textbf{解答：} 假。稳定匹配定义下不存在不稳定配对。
+\end{qparts}
+
+% 4. 稳定匹配 III
+\section*{4. 稳定匹配 III}
+\textbf{笔记 4}
+\begin{qparts}
+\item 真或假？
+\begin{enumerate}[{(}i{)}]
+\item 如果一名求职者在某一天意外拒绝了她更喜欢的某项工作，那么算法仍然总是以匹配结束。
+
+\textbf{解答：} 真。算法每轮都会有岗位提议，最终所有人都会被匹配，只是结果可能不是最优。
+
+\item 提出-拒绝算法从不产生求职者最优的匹配。
+
+\textbf{解答：} 假。有时岗位最优和求职者最优可能重合。
+
+\item 如果同一项工作在每个求职者的偏好列表中排在最后，那么该工作必须最终与它最不喜欢的求职者配对。
+
+\textbf{解答：} 假。该工作可能与倒数第二喜欢的求职者配对，具体取决于其他人的选择和拒绝顺序。
+\end{enumerate}
+
+\item 构造一个示例，说明对于任意 $n \geq 2$，存在一个稳定匹配实例，使用"随意拒绝"权力对每个求职者都有帮助。
+
+\begin{proof}
+以 $n=3$ 为例：
+
+岗位偏好：
+\begin{tabular}{c|ccc}
+岗位 & 第一 & 第二 & 第三 \\
+\hline
+1 & A & B & C \\
+2 & B & C & A \\
+3 & C & A & B \\
+\end{tabular}
+
+求职者偏好：
+\begin{tabular}{c|ccc}
+求职者 & 第一 & 第二 & 第三 \\
+\hline
+A & 2 & 3 & 1 \\
+B & 3 & 1 & 2 \\
+C & 1 & 2 & 3 \\
+\end{tabular}
+
+在岗位提议算法下，A会被1录用，B被2录用，C被3录用。若A拥有随意拒绝权，拒绝1的提议，最终A可与2配对，B与3，C与1，所有求职者都获得了更高偏好的岗位。
+
+对于更大 $n$，可类似构造循环偏好实例。
+\end{proof}
+\end{qparts}
+
+\end{document}
