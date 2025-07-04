@@ -1,0 +1,322 @@
+% CS70--Spring 2024 --- Homework 03 Solutions
+\documentclass[11pt]{article}
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,enumerate}
+\usepackage{xeCJK}
+
+\def\Name{JayZhao} % Your name
+\def\SID{0} % Your student ID number-
+\def\Homework{03} % Number of Homework
+\def\Session{Spring 2024}
+
+\title{CS70--\Session\ --- Homework \Homework \ Solutions}
+\author{\Name, SID \SID}
+\markboth{CS70--\Session\ Homework \Homework\ \Name}{CS70--\Session\ Homework \Homework\ \Name}
+\pagestyle{myheadings}
+\date{\today}
+
+\newenvironment{qparts}{\begin{enumerate}[{(}a{)}]}{\end{enumerate}}
+
+\def\endproofmark{$\blacksquare$}
+\newenvironment{proof}{\par\noindent{\bf 证明}:}{\endproofmark\smallskip}
+
+\textheight=9in
+\textwidth=6.5in
+\topmargin=-.75in
+\oddsidemargin=0.25in
+\evensidemargin=0.25in
+
+\begin{document}
+\maketitle
+
+\section*{杂项}
+我独立完成了本次作业，主要参考了课程笔记和讲义。在解题过程中，我首先理解每个问题的核心概念，然后尝试用相关的定理和定义来构建证明或计算结果。
+
+---
+
+\section*{1 简短的树证明}
+
+\begin{qparts}
+\item 证明无环图中的每个连通分量都是一棵树。
+\begin{proof}
+根据树的定义，一棵树是一个\textbf{连通的无环图}。
+设 G 是一个无环图，C 是 G 的一个连通分量。
+\begin{enumerate}
+    \item \textbf{连通性}：根据连通分量的定义，C 本身是一个连通图。
+    \item \textbf{无环性}：因为整个图 G 是无环的，它的任何子图（包括 C）也必然是无环的。
+\end{enumerate}
+由于 C 既是连通的又是无环的，所以根据定义，C 是一棵树。
+\end{proof}
+
+\item 假设 G 有 k 个连通分量。证明如果 G 是无环的，那么 $|E|=|V|-k$。
+\begin{proof}
+设 G 的 k 个连通分量为 $C_1, C_2, \dots, C_k$。
+根据 (a) 部分的结论，每个连通分量 $C_i$ 都是一棵树。
+对于任何一棵树，其边数等于其顶点数减 1。设 $C_i$ 的顶点数为 $|V_i|$，边数为 $|E_i|$，则有 $|E_i| = |V_i| - 1$。
+
+图 G 的总顶点数是所有分量顶点数之和：$|V| = \sum_{i=1}^{k} |V_i|$。
+图 G 的总边数是所有分量边数之和：$|E| = \sum_{i=1}^{k} |E_i|$。
+
+将每个分量的边数公式相加，我们得到：
+\[ |E| = \sum_{i=1}^{k} |E_i| = \sum_{i=1}^{k} (|V_i| - 1) = \left(\sum_{i=1}^{k} |V_i|\right) - \left(\sum_{i=1}^{k} 1\right) = |V| - k \]
+因此，如果 G 是一个有 k 个连通分量的无环图，则 $|E| = |V| - k$。
+\end{proof}
+
+\item 证明一个有 $|V|$ 条边的图包含一个环路。
+\begin{proof}
+我们使用反证法。
+假设一个有 $|V|$ 条边的图 G 不包含环路，即 G 是无环的。
+设 G 有 k 个连通分量。根据定义，对于任何图，$k \ge 1$（因为 $|V| \ge 1$）。
+根据 (b) 部分的结论，对于任何有 k 个连通分量的无环图，其边数 $|E|$ 必须满足 $|E| = |V| - k$。
+
+我们已知图 G 的边数为 $|E| = |V|$。
+将这个条件代入上面的公式，得到：
+\[ |V| = |V| - k \]
+这可以简化为 $k = 0$。
+但这与 $k \ge 1$ 的事实相矛盾。
+因此，我们的初始假设“G 不包含环路”是错误的。
+所以，一个有 $|V|$ 条边的图必定包含一个环路。
+\end{proof}
+\end{qparts}
+
+\section*{2 遍历超立方体}
+
+\begin{qparts}
+\item 证明一个超立方体有欧拉环游当且仅当 n 是偶数。
+\begin{proof}
+一个连通图存在欧拉环游的充要条件是图中每个顶点的度数都是偶数。
+在一个 n 维超立方体中，每个顶点（一个长度为 n 的二进制字符串）都与恰好在一位上与之不同的顶点相连。
+对于任意一个顶点，有 n 个比特位可以改变，因此它与 n 个其他的顶点相连。
+所以，n 维超立方体中每个顶点的度数都是 n。
+
+因此，一个 n 维超立方体有欧拉环游当且仅当 n（每个顶点的度数）是偶数。
+\end{proof}
+
+\item 证明每个超立方体都有哈密顿环游。
+\begin{proof}
+我们对维度 n 使用数学归纳法。
+
+\textbf{基础情形 (n=2)}：2-维超立方体是一个正方形，顶点为 00, 01, 11, 10。一个明显的哈密顿环游是 $00 \to 01 \to 11 \to 10 \to 00$。命题成立。
+
+\textbf{归纳假设}：假设对于某个 $n \ge 2$，n-维超立方体存在哈密顿环游。
+
+\textbf{归纳步骤}：我们来证明 (n+1)-维超立方体也存在哈密顿环游。
+一个 (n+1)-维超立方体可以看作两个 n-维超立方体 $H_0$ 和 $H_1$ 的组合。$H_0$ 中所有顶点的第一位是 0，而 $H_1$ 中所有顶点的第一位是 1。$H_0$ 中的任一顶点 $0v$ 都与 $H_1$ 中的对应顶点 $1v$ 相连。
+
+根据归纳假设，$H_0$ 存在一个哈密顿环游。设其顶点序列为 $0v_0, 0v_1, \dots, 0v_{2^n-1}, 0v_0$。
+我们可以构造一个 (n+1)-维超立方体的哈密顿环游如下：
+\begin{enumerate}
+    \item 从 $0v_0$ 开始，沿着 $H_0$ 的哈密顿路径（不走最后一步返回 $0v_0$）访问到 $0v_{2^n-1}$。路径为：$P_0 = (0v_0, 0v_1, \dots, 0v_{2^n-1})$。
+    \item 从 $0v_{2^n-1}$ 跨越到 $H_1$ 中的对应顶点 $1v_{2^n-1}$。
+    \item 在 $H_1$ 中，沿着 $H_0$ 哈密顿路径的\textbf{逆序}访问所有顶点。路径为：$P_1 = (1v_{2^n-1}, 1v_{2^n-2}, \dots, 1v_1, 1v_0)$。
+    \item 从 $1v_0$ 跨越回 $H_0$ 中的起始顶点 $0v_0$。
+\end{enumerate}
+完整的环游是 $0v_0 \to \dots \to 0v_{2^n-1} \to 1v_{2^n-1} \to \dots \to 1v_0 \to 0v_0$。这个环游访问了 $H_0$ 和 $H_1$ 中的所有顶点各一次，总共 $2 \cdot 2^n = 2^{n+1}$ 个顶点，构成了一个 (n+1)-维超立方体的哈密顿环游。
+因此，根据数学归纳法，每个超立方体都有哈密顿环游。
+\end{proof}
+\end{qparts}
+
+\section*{3 平面性与图的补图}
+\begin{qparts}
+\item 假设 G 有 v 个顶点和 e 条边。$\overline{G}$ 有多少条边？
+\begin{proof}
+一个有 v 个顶点的完全图 $K_v$ 拥有的总边数为 $\binom{v}{2} = \frac{v(v-1)}{2}$。
+图 G 的补图 $\overline{G}$ 的边集 $\overline{E}$ 包含了所有不在 G 的边集 E 中的边。
+因此，$\overline{G}$ 的边数 $|\overline{E}|$ 等于完全图的总边数减去 G 的边数 e。
+\[ |\overline{E}| = \frac{v(v-1)}{2} - e \]
+\end{proof}
+
+\item 证明对于任何至少有13个顶点的图 G，若 G 是平面的，则其补图 $\overline{G}$ 是非平面的。
+\begin{proof}
+我们知道对于任何一个有 $v \ge 3$ 个顶点的简单平面图，其边数 $e$ 满足不等式 $e \le 3v-6$。
+假设 G 是一个有 $v \ge 13$ 个顶点的平面图。那么 G 的边数 $e \le 3v-6$。
+
+其补图 $\overline{G}$ 的边数 $\overline{e}$ 为：
+\[ \overline{e} = \frac{v(v-1)}{2} - e \]
+由于 $e \le 3v-6$，那么 $-e \ge -(3v-6)$。代入上式：
+\[ \overline{e} \ge \frac{v(v-1)}{2} - (3v-6) = \frac{v^2-v-6v+12}{2} = \frac{v^2-7v+12}{2} = \frac{(v-3)(v-4)}{2} \]
+现在我们想证明 $\overline{G}$ 是非平面的。一个充分条件是证明 $\overline{e} > 3v-6$。我们来检验这个不等式：
+\[ \frac{(v-3)(v-4)}{2} > 3v-6 \]
+\[ v^2-7v+12 > 6v-12 \]
+\[ v^2-13v+24 > 0 \]
+该二次函数的根为 $x = \frac{13 \pm \sqrt{13^2 - 4(24)}}{2} = \frac{13 \pm \sqrt{169-96}}{2} = \frac{13 \pm \sqrt{73}}{2}$。
+$\sqrt{73}$ 约等于 8.5，所以根约为 $\frac{13 \pm 8.5}{2}$，即大约 2.25 和 10.75。
+当 $v$ 大于较大的根时，不等式 $v^2-13v+24 > 0$ 成立。
+题目给定 $v \ge 13$，这满足 $v > 10.75$ 的条件。因此，对于 $v \ge 13$，$\overline{e} > 3v-6$ 成立。
+由于补图 $\overline{G}$ 的边数超过了平面图所允许的最大边数，所以 $\overline{G}$ 必定是非平面的。
+\end{proof}
+
+\item 现在考虑上一部分的反命题...构建一个反例来证明该反命题不成立。
+\begin{proof}
+反命题是：“对于任何至少有13个顶点的图 G，如果 G 是非平面的，那么 $\overline{G}$ 是平面的。”
+我们需要构造一个有 $v \ge 13$ 个顶点的图 G，使得 G 和 $\overline{G}$ \textbf{都是非平面的}。
+
+设顶点总数 $v=13$。我们将顶点集 V 分为两个不相交的子集 $V_A$ 和 $V_B$，其中 $|V_A|=5$，$|V_B|=8$。
+构造图 G 如下：
+\begin{itemize}
+    \item 在顶点集 $V_A$ 上构造一个完全图 $K_5$。
+    \item $V_B$ 中的 8 个顶点是孤立的，它们之间以及它们与 $V_A$ 之间没有边。
+\end{itemize}
+这个图 G 包含 $K_5$ 作为其子图，因此 G 是\textbf{非平面的}。
+
+现在考虑 G 的补图 $\overline{G}$。$\overline{G}$ 的边集包含所有不在 G 中的边。
+\begin{itemize}
+    \item $\overline{G}$ 中不包含任何 $V_A$ 内部的边。
+    \item $\overline{G}$ 中包含所有连接 $V_A$ 和 $V_B$ 的边。这构成了一个完全二分图 $K_{5,8}$。
+    \item $\overline{G}$ 中包含所有 $V_B$ 内部的边，这构成了一个 $K_8$。
+\end{itemize}
+由于 $\overline{G}$ 包含了 $K_{5,8}$ 作为其子图，而 $K_{5,8}$ 又包含了 $K_{3,3}$ 作为子图，所以 $\overline{G}$ 也是\textbf{非平面的}。
+因此，这个构造的图 G（$v=13$）是一个有效的反例。
+\end{proof}
+\end{qparts}
+
+\section*{4 模运算练习}
+\begin{qparts}
+\item $9x+5\equiv7 \pmod{13}$。
+\begin{proof}
+$9x \equiv 7-5 \pmod{13} \implies 9x \equiv 2 \pmod{13}$。
+我们需要找到 9 模 13 的乘法逆元。通过扩展欧几里得算法或尝试，我们发现 $9 \cdot 3 = 27 = 2 \cdot 13 + 1$，所以 $9^{-1} \equiv 3 \pmod{13}$。
+两边乘以 3：
+$3 \cdot (9x) \equiv 3 \cdot 2 \pmod{13}$
+$x \equiv 6 \pmod{13}$。
+\end{proof}
+
+\item 证明 $3x+12\equiv4 \pmod{21}$ 没有解。
+\begin{proof}
+$3x \equiv 4-12 \pmod{21} \implies 3x \equiv -8 \equiv 13 \pmod{21}$。
+一个线性同余方程 $ax \equiv b \pmod m$ 有解，当且仅当 $\text{gcd}(a, m)$ 整除 $b$。
+在这里，$a=3, b=13, m=21$。
+$\text{gcd}(3, 21) = 3$。
+因为 3 不能整除 13，所以该方程没有整数解。
+\end{proof}
+
+\item 求解联立方程组 $5x+4y\equiv0 \pmod{7}$ 和 $2x+y\equiv4 \pmod{7}$。
+\begin{proof}
+我们有方程组：
+(1) $5x+4y\equiv0 \pmod{7}$
+(2) $2x+y\equiv4 \pmod{7}$
+
+从方程 (2) 中，我们可以解出 y：
+$y \equiv 4 - 2x \pmod{7}$。
+将 y 的表达式代入方程 (1)：
+$5x + 4(4-2x) \equiv 0 \pmod{7}$
+$5x + 16 - 8x \equiv 0 \pmod{7}$
+$-3x + 16 \equiv 0 \pmod{7}$
+在模 7 的意义下，$-3 \equiv 4$ 且 $16 \equiv 2$。
+$4x + 2 \equiv 0 \pmod{7}$
+$4x \equiv -2 \equiv 5 \pmod{7}$
+4 模 7 的逆元是 2（因为 $4 \cdot 2 = 8 \equiv 1$）。两边乘以 2：
+$x \equiv 5 \cdot 2 = 10 \equiv 3 \pmod{7}$。
+将 $x=3$ 代回 y 的表达式：
+$y \equiv 4 - 2(3) = 4 - 6 = -2 \equiv 5 \pmod{7}$。
+解是 $x \equiv 3 \pmod{7}$，$y \equiv 5 \pmod{7}$。
+\end{proof}
+
+\item $13^{2023}\equiv x \pmod{12}$。
+\begin{proof}
+首先，简化底数：$13 \equiv 1 \pmod{12}$。
+所以，$13^{2023} \equiv 1^{2023} \equiv 1 \pmod{12}$。
+$x=1$。
+\end{proof}
+
+\item $7^{62}\equiv x \pmod{11}$。
+\begin{proof}
+因为 11 是素数，根据费马小定理，$a^{p-1} \equiv 1 \pmod p$ 对于 $p \nmid a$ 成立。
+所以，$7^{10} \equiv 1 \pmod{11}$。
+我们将指数 62 用 10 来表示：$62 = 6 \cdot 10 + 2$。
+$7^{62} = 7^{6 \cdot 10 + 2} = (7^{10})^6 \cdot 7^2$
+$7^{62} \equiv (1)^6 \cdot 7^2 \equiv 1 \cdot 49 \equiv 49 \pmod{11}$。
+$49 = 4 \cdot 11 + 5$，所以 $49 \equiv 5 \pmod{11}$。
+$x=5$。
+\end{proof}
+\end{qparts}
+
+\section*{5 简答题：模运算}
+\begin{qparts}
+\item $n-1$ 模 n 的乘法逆元是什么？
+\begin{proof}
+我们需要找到一个 x 使得 $(n-1)x \equiv 1 \pmod n$。
+注意到 $n-1 \equiv -1 \pmod n$。
+所以方程变为 $(-1)x \equiv 1 \pmod n$，即 $-x \equiv 1 \pmod n$。
+两边乘以 -1，得到 $x \equiv -1 \pmod n$。
+$-1 \pmod n$ 等价于 $n-1$。
+所以 $n-1$ 本身就是它自己的乘法逆元。
+\end{proof}
+
+\item 方程 $3x\equiv6 \pmod{17}$ 的解是什么？
+\begin{proof}
+因为 $\text{gcd}(3, 17) = 1$，我们可以安全地在同余式两边“除以”3。
+$x \equiv 6/3 \pmod{17}$
+$x \equiv 2 \pmod{17}$。
+\end{proof}
+
+\item 对于 $n\ge1$，$R_{n}\equiv2 \pmod{3}$ 是否成立？
+\begin{proof}
+我们将递推关系在模 3 的意义下进行分析：
+$R_n \equiv 4R_{n-1} - 3R_{n-2} \pmod{3}$
+因为 $4 \equiv 1 \pmod 3$ 且 $3 \equiv 0 \pmod 3$，所以：
+$R_n \equiv 1 \cdot R_{n-1} - 0 \cdot R_{n-2} \equiv R_{n-1} \pmod 3$。
+这表明对于 $n \ge 2$，序列模 3 的值是恒定的。
+$R_n \equiv R_{n-1} \equiv \dots \equiv R_1 \pmod 3$。
+我们已知 $R_1=2$，所以 $R_1 \equiv 2 \pmod 3$。
+因此，对于所有 $n \ge 1$，$R_n \equiv 2 \pmod 3$ 都成立。
+答案：\textbf{是}。
+\end{proof}
+
+\item 已知 $(7)(53)-m=1$，方程 $53x+3\equiv10 \pmod{m}$ 的解是什么？
+\begin{proof}
+由 $(7)(53)-m=1$ 可得 $7 \cdot 53 = m+1$，这意味着 $7 \cdot 53 \equiv 1 \pmod m$。
+根据定义，这说明 53 模 m 的乘法逆元是 7，即 $53^{-1} \equiv 7 \pmod m$。
+
+现在解方程 $53x+3 \equiv 10 \pmod m$。
+$53x \equiv 10-3 \equiv 7 \pmod m$。
+两边同时乘以 53 的逆元，即 7：
+$7 \cdot (53x) \equiv 7 \cdot 7 \pmod m$
+$1 \cdot x \equiv 49 \pmod m$
+$x \equiv 49 \pmod m$。
+\end{proof}
+\end{qparts}
+
+\section*{6 威尔逊定理}
+
+\begin{proof}
+\textbf{第一部分（“如果”方向）：如果 p 是素数，则 $(p-1)! \equiv -1 \pmod p$。}
+当 $p=2$ 时，$(2-1)! = 1! = 1 \equiv -1 \pmod 2$，成立。
+当 $p>2$ 时，p 是奇素数。考虑集合 $S = \{1, 2, \dots, p-1\}$。对于 S 中的任意元素 a，因为 p 是素数，所以存在唯一的乘法逆元 $a^{-1} \in S$ 使得 $a \cdot a^{-1} \equiv 1 \pmod p$。
+
+我们需要找到哪些元素是它们自身的逆元，即满足 $x \equiv x^{-1} \pmod p$ 或 $x^2 \equiv 1 \pmod p$。
+$x^2-1 \equiv 0 \pmod p \implies (x-1)(x+1) \equiv 0 \pmod p$。
+因为 p 是素数，这意味着 $p \mid (x-1)$ 或 $p \mid (x+1)$。
+所以 $x \equiv 1 \pmod p$ 或 $x \equiv -1 \equiv p-1 \pmod p$。
+在集合 S 中，只有 1 和 p-1 是它们自身的逆元。
+
+S 中的所有其他元素 $\{2, 3, \dots, p-2\}$ 都可以两两配对，使得每一对的乘积模 p 为 1。
+因此，计算 $(p-1)! \pmod p$ 时：
+\[ (p-1)! = 1 \cdot (2 \cdot 3 \cdot \dots \cdot (p-2)) \cdot (p-1) \]
+\[ (p-1)! \equiv 1 \cdot (1 \cdot 1 \cdot \dots \cdot 1) \cdot (p-1) \pmod p \]
+\[ (p-1)! \equiv 1 \cdot (p-1) \equiv -1 \pmod p \]
+证明完毕。
+
+\textbf{第二部分（“仅当”方向）：如果 $(p-1)! \equiv -1 \pmod p$，则 p 是素数。}
+我们使用反证法（证明其逆否命题）。假设 p 不是素数（即 p 是合数），我们要证明 $(p-1)! \not\equiv -1 \pmod p$。
+
+如果 p 是合数，那么存在一个整数 d 使得 $1 < d < p$ 且 $d \mid p$。
+
+\textbf{情况1}：p 可以写成 $p=ab$ 的形式，其中 $a, b$ 是不相等的整数且 $1 < a, b < p$。
+因为 a 和 b 都是小于 p 的不同整数，所以它们都出现在 $(p-1)! = 1 \cdot 2 \cdot \dots \cdot (p-1)$ 的乘积中。
+因此，ab 会整除 $(p-1)!$，即 p 整除 $(p-1)!$。
+所以 $(p-1)! \equiv 0 \pmod p$。
+因为 $p>2$ (p是合数)，$0 \not\equiv -1 \pmod p$，所以命题不成立。
+
+\textbf{情况2}：p 是某个素数 q 的平方，即 $p=q^2$。
+当 $p=4$ 时 ($q=2$)，$(4-1)! = 3! = 6$。$6 \equiv 2 \pmod 4$。$2 \not\equiv -1 \pmod 4$，命题不成立。
+当 $p>4$ 时，意味着 $q>2$。
+在这种情况下，q 和 2q 都是小于 p 的整数（因为 $p=q^2>2q \iff q>2$）。
+所以，q 和 2q 都是 $(p-1)!$ 的因子。
+因此，$(p-1)!$ 的乘积中包含 $q \cdot (2q) = 2q^2 = 2p$。
+这意味着 $p$ 整除 $(p-1)!$，所以 $(p-1)! \equiv 0 \pmod p$。
+同样，$0 \not\equiv -1 \pmod p$。
+
+综上所述，如果 p 是合数，则 $(p-1)! \equiv 0 \pmod p$ (除了p=4的特例，其结果为2)，这不等于 -1。因此，如果 $(p-1)! \equiv -1 \pmod p$ 成立，p 必须是素数。
+\end{proof}
+
+\end{document}

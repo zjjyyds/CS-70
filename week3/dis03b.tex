@@ -1,0 +1,250 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,enumerate}
+\usepackage{xeCJK}
+
+\def\Name{JayZhao}
+\def\SID{0}
+\def\Homework{3B}
+\def\Session{Spring 2024}
+
+\title{CS 70--\Session\ --- Discussion \Homework \ Solutions}
+\author{\Name}
+\markboth{CS70--\Session\ Discussion \Homework\ \Name}{CS70--\Session\ Discussion \Homework\ \Name}
+\pagestyle{myheadings}
+\date{\today}
+
+\newenvironment{qparts}{\begin{enumerate}[{(}a{)}]}{\end{enumerate}}
+\def\endproofmark{$\blacksquare$}
+\newenvironment{proof}{\par\noindent{\bf 解答}:}{\endproofmark\smallskip}
+
+\textheight=9in
+\textwidth=6.5in
+\topmargin=-.75in
+\oddsidemargin=0.25in
+\evensidemargin=0.25in
+
+\begin{document}
+\maketitle
+
+\section*{1 扩展欧几里得算法：两种方法}
+
+\begin{qparts}
+\item 作为引子，假设我们已经找到了 a 和 b 的值，使得 $54a+17b=1$。利用这个信息，$17^{-1}$ (mod 54) 是多少 ？
+\begin{proof}
+我们将等式 $54a+17b=1$ 在模 54 的意义下进行考察。
+\[ 54a+17b \equiv 1 \pmod{54} \]
+由于 $54a$ 是 54 的倍数，所以 $54a \equiv 0 \pmod{54}$。
+\[ 0 + 17b \equiv 1 \pmod{54} \]
+\[ 17b \equiv 1 \pmod{54} \]
+根据乘法逆元的定义，b 是 17 模 54 的逆元。因此，$17^{-1} \equiv b \pmod{54}$。
+\end{proof}
+
+\item 注意，根据定义，x mod y 总是 x 减去 y 的某个倍数 。因此，在执行欧几里得算法时，每个新引入的值总能表示为前两个值的“组合”，如下所示： 
+\begin{proof}
+$gcd(54,17)=gcd(17,3)$
+\quad $3=1\times54-3\times17$
+
+$=gcd(3,2)$
+\quad $2=1\times17- \textbf{5} \times3$ \quad ($17 = 5 \times 3 + 2$)
+
+$=gcd(2,1)$
+\quad $1=1\times3- \textbf{1} \times2$ \quad ($3 = 1 \times 2 + 1$)
+
+$=gcd(1,0)$
+\quad $[0=1\times2- \textbf{2} \times1]$ \quad ($2 = 2 \times 1 + 0$)
+
+$=1$
+\end{proof}
+
+\item 回顾一下，我们的目标是填写以下表达式中的空白。为此，我们从底部开始向上回溯...
+\begin{proof}
+我们从 $1 = 1 \times 3 - 1 \times 2$ 开始，并逐步向上代入。
+
+$1 = \textbf{1} \times 3 - \textbf{1} \times 2$
+
+用上一行的 $2 = 1 \times 17 - 5 \times 3$ 代入：
+$= 1 \times 3 - 1 \times (1 \times 17 - 5 \times 3)$
+$= 1 \times 3 - 1 \times 17 + 5 \times 3$
+$= \textbf{6} \times 3 - \textbf{1} \times 17$
+
+用最上面一行的 $3 = 1 \times 54 - 3 \times 17$ 代入：
+$= 6 \times (1 \times 54 - 3 \times 17) - 1 \times 17$
+$= 6 \times 54 - 18 \times 17 - 1 \times 17$
+$= \textbf{6} \times 54 - \textbf{19} \times 17$
+
+最终我们得到 $1 = 6 \times 54 - 19 \times 17$。
+
+根据 (a) 部分的结论，我们知道在这种情况下 $b = -19$ 是 17 模 54 的乘法逆元。
+所以，$17^{-1} \equiv -19 \equiv -19 + 54 \equiv 35 \pmod{54}$。
+\end{proof}
+
+\item 在前面的部分中，我们使用递归方法...我们也可以通过迭代方式计算出相同的结果...
+\begin{proof}
+我们从给定的两个方程开始：
+$54=1\times54+0\times17$ (E1)
+$17=0\times54+1\times17$ (E2)
+
+因为 $54 = 3 \times 17 + 3$，所以我们计算 $E_3 = E_1 - 3 \times E_2$：
+$(54 - 3 \times 17) = (1 - 3 \times 0) \times 54 + (0 - 3 \times 1) \times 17$
+$\textbf{3} = \textbf{1} \times 54 - \textbf{3} \times 17 \quad (E_{3}=E_{1}- \textbf{3} \times E_{2})$
+
+接下来，因为 $17 = 5 \times 3 + 2$，我们计算 $E_4 = E_2 - 5 \times E_3$：
+$(17 - 5 \times 3) = (0 - 5 \times 1) \times 54 + (1 - 5 \times (-3)) \times 17$
+$\textbf{2} = \textbf{-5} \times 54 + \textbf{16} \times 17 \quad (E_{4}=E_{2}- \textbf{5} \times E_{3})$
+
+最后，因为 $3 = 1 \times 2 + 1$，我们计算 $E_5 = E_3 - 1 \times E_4$：
+$(3 - 1 \times 2) = (1 - 1 \times (-5)) \times 54 + (-3 - 1 \times 16) \times 17$
+$1 = \textbf{6} \times 54 - \textbf{19} \times 17 \quad (E_{5}=E_{3}- \textbf{1} \times E_{4})$
+
+这个结果 $1 = 6 \times 54 - 19 \times 17$ 与前一部分的结果完全相同。
+同样，这意味着 17 模 54 的乘法逆元是 $-19 \equiv 35 \pmod{54}$。
+\end{proof}
+
+\item 计算 17 和 39 的最大公约数（gcd），并确定如何将其表示为 17 和 39 的“组合”...
+\begin{proof}
+我们使用扩展欧几里得算法（迭代版本）来计算 gcd(39, 17)。
+$39 = 1 \times 39 + 0 \times 17$
+$17 = 0 \times 39 + 1 \times 17$
+
+$39 = 2 \times 17 + 5 \implies 5 = 39 - 2 \times 17$
+$5 = (1 \times 39 + 0 \times 17) - 2 \times (0 \times 39 + 1 \times 17) = 1 \times 39 - 2 \times 17$
+
+$17 = 3 \times 5 + 2 \implies 2 = 17 - 3 \times 5$
+$2 = (0 \times 39 + 1 \times 17) - 3 \times (1 \times 39 - 2 \times 17) = -3 \times 39 + 7 \times 17$
+
+$5 = 2 \times 2 + 1 \implies 1 = 5 - 2 \times 2$
+$1 = (1 \times 39 - 2 \times 17) - 2 \times (-3 \times 39 + 7 \times 17)$
+$1 = 1 \times 39 - 2 \times 17 + 6 \times 39 - 14 \times 17$
+$1 = 7 \times 39 - 16 \times 17$
+
+所以，$\text{gcd}(17, 39) = 1$。
+其线性组合为 $1 = 7 \times 39 - 16 \times 17$。
+在模 39 的意义下考察这个等式：
+$7 \times 39 - 16 \times 17 \equiv 1 \pmod{39}$
+$0 - 16 \times 17 \equiv 1 \pmod{39}$
+这意味着 17 模 39 的乘法逆元是 $-16 \equiv -16 + 39 \equiv 23 \pmod{39}$。
+\end{proof}
+\end{qparts}
+
+\newpage
+
+\section*{2 中国剩余定理练习}
+
+\begin{qparts}
+\item 假设你找到了 3 个自然数 a, b, c...展示你如何利用已知的 a, b 和 c 来计算一个满足条件的 x 。
+\begin{proof}
+我们想要找到一个 x，满足：
+$x\equiv1$ (mod 3)
+$x\equiv3$ (mod 7)
+$x\equiv4$ (mod 11)
+
+我们可以构造一个解为 $x = 1 \cdot a + 3 \cdot b + 4 \cdot c$。
+让我们来验证这个 x 是否满足所有条件：
+\begin{itemize}
+    \item \textbf{模 3}:
+    $x \equiv 1 \cdot a + 3 \cdot b + 4 \cdot c \pmod{3}$
+    $x \equiv 1 \cdot (1) + 3 \cdot (0) + 4 \cdot (0) \equiv 1 \pmod{3}$。
+    \item \textbf{模 7}:
+    $x \equiv 1 \cdot a + 3 \cdot b + 4 \cdot c \pmod{7}$
+    $x \equiv 1 \cdot (0) + 3 \cdot (1) + 4 \cdot (0) \equiv 3 \pmod{7}$。
+    \item \textbf{模 11}:
+    $x \equiv 1 \cdot a + 3 \cdot b + 4 \cdot c \pmod{11}$
+    $x \equiv 1 \cdot (0) + 3 \cdot (0) + 4 \cdot (1) \equiv 4 \pmod{11}$。
+\end{itemize}
+因此，$x = a + 3b + 4c$ 就是一个满足所有条件的解。
+\end{proof}
+
+\item 找一个满足条件 (2) 的自然数 a。
+\begin{proof}
+我们需要 $a$ 是 7 和 11 的倍数，即 $a$ 是 $7 \times 11 = 77$ 的倍数。所以 $a = 77k$。
+我们还需要 $a \equiv 1 \pmod{3}$。
+$77k \equiv 1 \pmod{3}$
+因为 $77 = 25 \times 3 + 2$，所以 $77 \equiv 2 \pmod{3}$。
+$2k \equiv 1 \pmod{3}$
+两边乘以 2 (2 是 2 模 3 的逆元)，得到
+$4k \equiv 2 \pmod{3}$
+$k \equiv 2 \pmod{3}$
+取最简单的 $k=2$，我们得到 $a = 77 \times 2 = 154$。
+\end{proof}
+
+\item 找一个满足条件 (3) 的自然数 b。
+\begin{proof}
+我们需要 $b$ 是 3 和 11 的倍数，即 $b$ 是 $3 \times 11 = 33$ 的倍数。所以 $b = 33k$。
+我们还需要 $b \equiv 1 \pmod{7}$。
+$33k \equiv 1 \pmod{7}$
+因为 $33 = 4 \times 7 + 5$，所以 $33 \equiv 5 \pmod{7}$。
+$5k \equiv 1 \pmod{7}$
+两边乘以 3 (3 是 5 模 7 的逆元)，得到
+$15k \equiv 3 \pmod{7}$
+$k \equiv 3 \pmod{7}$
+取最简单的 $k=3$，我们得到 $b = 33 \times 3 = 99$。
+\end{proof}
+
+\item 找一个满足条件 (4) 的自然数 c。
+\begin{proof}
+我们需要 $c$ 是 3 和 7 的倍数，即 $c$ 是 $3 \times 7 = 21$ 的倍数。所以 $c = 21k$。
+我们还需要 $c \equiv 1 \pmod{11}$。
+$21k \equiv 1 \pmod{11}$
+因为 $21 = 1 \times 11 + 10$，所以 $21 \equiv 10 \equiv -1 \pmod{11}$。
+$-k \equiv 1 \pmod{11}$
+$k \equiv -1 \equiv 10 \pmod{11}$
+取最简单的 $k=10$，我们得到 $c = 21 \times 10 = 210$。
+\end{proof}
+
+\item 结合你在 (a), (b), (c) 和 (d) 部分的答案，给出一个满足条件 (1) 的 x 。
+\begin{proof}
+根据 (a) 部分的结论，我们构造解 $x = a + 3b + 4c$。
+代入我们求得的值：
+$x = 154 + 3 \times (99) + 4 \times (210)$
+$x = 154 + 297 + 840$
+$x = 1291$
+
+这是一个满足条件的解。为了找到最小的正整数解，我们可以将 x 模 $3 \times 7 \times 11 = 231$。
+$1291 = 5 \times 231 + 136$
+所以最小正整数解是 $x=136$。
+\end{proof}
+\end{qparts}
+
+\newpage
+
+\section*{3 宝贝费马小定理}
+
+\begin{qparts}
+\item 考虑无限序列 $a,a^{2},a^{3},...(\text{mod }m)$。证明这个序列存在重复项 。
+\begin{proof}
+序列中的每一项 $a^k$ 在模 m 的意义下，其可能的值都来自于集合 $\{0, 1, 2, ..., m-1\}$。这是一个大小为 m 的有限集合。
+我们的序列 $a^1 \pmod m, a^2 \pmod m, a^3 \pmod m, ...$ 是一个无限序列。
+根据\textbf{鸽巢原理}，如果我们从这个无限序列中取出 $m+1$ 个项（例如前 $m+1$ 项），并将它们放入 m 个“鸽巢”（即 m 个可能的余数）中，那么必然至少有一个鸽巢包含两个或更多的项。
+这意味着，至少存在两个不相等的指数 $i$ 和 $j$（假设 $i>j$），使得 $a^i \equiv a^j \pmod m$。
+因此，这个序列必然存在重复项。
+\end{proof}
+
+\item 假设 $a^{i}\equiv a^{j}$ (mod m)，其中 $i>j$，那么 $a^{i-j}$ (mod m) 的值是多少 ？
+\begin{proof}
+我们已知 $a^{i} \equiv a^{j} \pmod m$。
+问题的前提是 $a$ 在模 $m$ 下\textbf{确实有乘法逆元}，我们将其记为 $a^{-1}$。这意味着我们可以用 $a^{-1}$ 乘以同余式的两边。
+我们将同余式两边同时乘以 $(a^{-1})^j$：
+\[ a^i \cdot (a^{-1})^j \equiv a^j \cdot (a^{-1})^j \pmod m \]
+\[ a^{i-j} \equiv a^{j-j} \pmod m \]
+\[ a^{i-j} \equiv a^0 \pmod m \]
+\[ a^{i-j} \equiv 1 \pmod m \]
+所以，$a^{i-j} \pmod m$ 的值是 1。
+\end{proof}
+
+\item 证明乘法逆元可以写成 $a^{k}$ (mod m) 的形式 。k 用 i 和 j 如何表示 ？
+\begin{proof}
+从 (b) 部分我们得知 $a^{i-j} \equiv 1 \pmod m$。
+由于 $i>j$ 且它们都是正整数，所以 $i-j \ge 1$。
+我们可以将 $a^{i-j}$ 写成 $a \cdot a^{i-j-1}$。
+所以，同余式变为：
+\[ a \cdot a^{i-j-1} \equiv 1 \pmod m \]
+根据乘法逆元的定义，如果 $a \cdot x \equiv 1 \pmod m$，那么 $x$ 就是 $a$ 的乘法逆元。
+在我们的情况中，$x = a^{i-j-1}$。
+因此，$a$ 的乘法逆元可以写成 $a^k$ 的形式，其中 $k = i-j-1$。
+由于 $i>j \ge 1$, 所以 $i-j \ge 1$, 那么 $k = i-j-1 \ge 0$。
+这证明了乘法逆元确实可以写成 $a^k$ (mod m) 的形式，其中 $k$ 是一个非负整数。
+\end{proof}
+
+\end{qparts}
+
+\end{document}
